@@ -51,7 +51,7 @@ void identity(int rank, double *out){
     }
 }
 
-double *factorize(const double *A, int rank, double *Lower, double *Upper){
+double *factorize(const double *A, double *Lower, double *Upper, int rank){
     identity(rank, Lower);
     memcpy(Upper, A, sizeof(double)*rank*rank);
     
@@ -83,7 +83,7 @@ int main(void) {
     A[0] = 1; A[1] = 2; A[2] = 3; A[3] = 4;
     print_matrix(A, rank);
 
-    factorize(A, rank, Lower, Upper);
+    factorize(A, Lower, Upper, rank);
     
     solve(Lower, Upper, consts, rank);
 
