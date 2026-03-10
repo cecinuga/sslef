@@ -1,16 +1,18 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+#include <string.h>
 
 /// pass from 2D point to 1D point, used to calculate the position in 1D matrix notations
-int to_line(int i, int j){
-    return (i+1)*(j+1)-1;
+int to_line(int x, int y, int rows){
+    return 2*x + y;
 }
 
 double get(double *A, int rank, int i, int j){
     assert(A != NULL);
+    int pos = to_line(i, j, rank);
 
-    int pos = to_line(i, j);
+    assert(pos >= 0);
     assert(pos < rank*rank);
      
     return A[pos];
@@ -19,7 +21,7 @@ double get(double *A, int rank, int i, int j){
 void set(double *A, int rank, int i, int j, int val){
     assert(A != NULL);
 
-    int pos = to_line(i, j);
+    int pos = to_line(i, j, rank);
     assert(pos < rank*rank);
 
     A[pos] = val;
@@ -49,10 +51,11 @@ void identity(int rank, double *out){
     }
 }
 
-double *factorize(double *A, int rank, double *Lower, double *Upper){
+double *factorize(const double *A, int rank, double *Lower, double *Upper){
     identity(rank, Lower);
-    identity(rank, Upper);
+    memcpy(Upper, A, sizeof(double)*rank*rank);
     
+    return NULL;
 }
 
 /// @brief 
@@ -66,20 +69,22 @@ double *solve(double *Lower, double *Upper, double *consts, int rank){
 }
 
 int main(void) {
-    int rank = 3;
+    // DECLARE
+    int rank = 2;
     size_t vector_size = sizeof(double)*rank;
     size_t matrix_size = sizeof(double)*rank*rank;
     
     double *A = malloc(matrix_size);
     double *Lower = malloc(matrix_size);
     double *Upper = malloc(matrix_size);
-
     double *consts = malloc(vector_size);
+
+    // ASSIGN
+    A[0] = 1; A[1] = 2; A[2] = 3; A[3] = 4;
+    print_matrix(A, rank);
 
     factorize(A, rank, Lower, Upper);
     
-    print_matrix(A, rank);
-
     solve(Lower, Upper, consts, rank);
 
     free(A); free(Lower); free(Upper); free(consts);
