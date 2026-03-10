@@ -49,22 +49,35 @@ void identity(int rank, double *out){
     }
 }
 
+double *factorize(double *A, int rank, double *Lower, double *Upper){
+    identity(rank, Lower);
+    identity(rank, Upper);
+    
+}
+
 /// @brief 
 /// @param A The Matrix
 /// @param n square rank
 /// @return 
 double *solver(double *A, int rank){
-    double *L = malloc(sizeof(double)*rank*rank);
-    double *U = malloc(sizeof(double)*rank*rank);
 
-    identity(rank, L);
-    identity(rank, U);
-    
-    print_matrix(L, rank);
     
     return NULL;
 }
 
 int main(void) {
+    int rank = 3;
+    size_t size = sizeof(double)*rank*rank;
+    
+    double *A = malloc(size);
+    double *Lower = malloc(size);
+    double *Upper = malloc(size);
+
+    factorize(A, rank, Lower, Upper);
+    
+    print_matrix(A, rank);
+
     solver(NULL, 3);
+
+    free(A); free(Lower); free(Upper);
 }
