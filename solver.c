@@ -59,7 +59,7 @@ double *factorize(double *A, int rank, double *Lower, double *Upper){
 /// @param A The Matrix
 /// @param n square rank
 /// @return 
-double *solver(double *A, int rank){
+double *solve(double *Lower, double *Upper, double *consts, int rank){
 
     
     return NULL;
@@ -67,17 +67,20 @@ double *solver(double *A, int rank){
 
 int main(void) {
     int rank = 3;
-    size_t size = sizeof(double)*rank*rank;
+    size_t vector_size = sizeof(double)*rank;
+    size_t matrix_size = sizeof(double)*rank*rank;
     
-    double *A = malloc(size);
-    double *Lower = malloc(size);
-    double *Upper = malloc(size);
+    double *A = malloc(matrix_size);
+    double *Lower = malloc(matrix_size);
+    double *Upper = malloc(matrix_size);
+
+    double *consts = malloc(vector_size);
 
     factorize(A, rank, Lower, Upper);
     
     print_matrix(A, rank);
 
-    solver(NULL, 3);
+    solve(Lower, Upper, consts, rank);
 
-    free(A); free(Lower); free(Upper);
+    free(A); free(Lower); free(Upper); free(consts);
 }
