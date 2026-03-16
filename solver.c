@@ -15,24 +15,33 @@ void print_matrix(double **A, int rank){
     printf("]\n");
 }
 
-void elimination(double **coefs, int rank){
+void elimination(double **coefs, double **U, double **L, int rank){
+    for(int j = 0; j < rank; j++)
+        U[0][j] = coefs[0][j];
+
     for(int i = 1; i < rank; i++){
         double c = 0;
+        int firstNonZero = 0;
         for(int j = 0; j < rank; j++){
-            if(j < i && coefs[i][j] != 0) { // perform elimination 
+            U[i][j] = coefs[i][j]; // FIX MEMORY LEAK ACCESSING TO NULL POSITION
+            if (!firstNonZero && coefs[i][j] != 0){
                 c = coefs[i][j]/coefs[i-1][j];
+                firstNonZero = 1;
             }
-            coefs[i][j] -= coefs[i-1][j] * c;
+            //U[i][j] -= coefs[i-1][j] * c;
+            
+            // FOUND PIVOT AND ASSIGN TO L[i][j]
         }
     }
 }
 
-
 int main(void) {
-    // DECLARE
     int rank = 3;
 
     double **coefs = calloc(rank, sizeof(double)*rank);
+    double **upper = calloc(rank, sizeof(double)*rank); // FIX MEMORY LEAK ACCESSING TO NULL POSITION
+    double **lower = calloc(rank, sizeof(double)*rank);
+
     double *consts = calloc(rank, sizeof(double));
 
     double col1[] = {1, 2, 1}; 
@@ -47,11 +56,14 @@ int main(void) {
     printf("before elimination: \n");
     print_matrix(coefs, rank);
     
-    elimination(coefs, rank);
+    elimination(coefs, upper, lower, rank);
 
     printf("------------------------------\n");
     printf("after elimination: \n");
     print_matrix(coefs, rank);
+    
+    printf("\nupper triangle: \n");
+    print_matrix(upper, rank);
 
-    free(coefs); free(consts);
+    free(coefs); free(consts); free(upper); free(lower);
 }
