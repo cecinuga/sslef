@@ -1,6 +1,16 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+void print_ivector(int *v, int rank){
+    printf("[");
+    for(int i = 0; i < rank; i++){
+        printf("%d", v[i]);
+        if(i < rank-1) 
+            printf(",");
+    }
+    printf("]\n");
+}
+
 void print_matrix(double **A, int rank){
     printf("[");
     for(int i = 0; i < rank; i++){
@@ -20,15 +30,25 @@ double dabs(double a){
     return a*-1;
 }
 
+void swapi(int *v, const int rank, const int i, const int j){
+    int tmp = v[i];
+    v[i] = v[j];
+    v[j] = tmp;
+}
+
 void swap_row(double **A, const int rank, const int i, const int j){
     double *tmp = A[i];
     A[i] = A[j];
     A[j] = tmp;
 }
 
-void partial_pivoting(double **A, const int rank){
+int *partial_pivoting(double **A, int *permutation, const int rank){
     int max_i = 0;
     double max = 0;
+
+    for (int i = 0; i < rank; i++ )
+        permutation[i] = i;
+
     for (int i = 0; i < rank; i++){
         max_i = i;
         max = A[i][i];
@@ -39,6 +59,7 @@ void partial_pivoting(double **A, const int rank){
             }
         }
 
+        swapi(permutation, rank, i, max_i);
         swap_row(A, rank, i, max_i);
     }
 }
@@ -51,8 +72,9 @@ void elimination(double **coefs, double **U, double **L, int rank){
 }
 
 int main(void) {
-    int rank = 5;
+    int rank = 3;
 
+    int *permutation = calloc(rank, sizeof(int));
     double **coefs = calloc(rank, sizeof(double)*rank);
     double **upper = calloc(rank, sizeof(double)*rank); // FIX MEMORY LEAK ACCESSING TO NULL POSITION
     double **lower = calloc(rank, sizeof(double)*rank);
@@ -75,10 +97,12 @@ int main(void) {
     printf("original matrix: \n");
     print_matrix(coefs, rank);
 
-    printf("after partial pivoting: \n");
-    partial_pivoting(coefs, rank);
+    printf("\nafter partial pivoting: \n");
+    partial_pivoting(coefs, permutation, rank);
     print_matrix(coefs, rank);
     
+    printf("\npermutation flatted matrix: \n");
+    print_ivector(permutation, rank);
 
     /*elimination(coefs, upper, lower, rank);
 
@@ -89,5 +113,5 @@ int main(void) {
     printf("\nupper triangle: \n");
     print_matrix(upper, rank);*/
 
-    free(coefs); free(consts); free(upper); free(lower);
+    free(permutation); free(coefs); free(consts); free(upper); free(lower);
 }
