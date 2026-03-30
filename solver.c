@@ -15,28 +15,43 @@ void print_matrix(double **A, int rank){
     printf("]\n");
 }
 
+double dabs(double a){
+    if (a >= 0) return a;
+    return a*-1;
+}
+
+void swap_row(double **A, const int rank, const int i, const int j){
+    double *tmp = A[i];
+    A[i] = A[j];
+    A[j] = tmp;
+}
+
+void partial_pivoting(double **A, const int rank){
+    int max_i = 0;
+    double max = 0;
+    for (int i = 0; i < rank; i++){
+        max_i = i;
+        max = A[i][i];
+        for (int j = i; j < rank; j++){
+            if ( dabs(A[j][i]) > max ) {
+                max_i = j;
+                max = dabs(A[j][i]);
+            }
+        }
+
+        swap_row(A, rank, i, max_i);
+    }
+}
+
 void elimination(double **coefs, double **U, double **L, int rank){
     for(int j = 0; j < rank; j++)
         U[0][j] = coefs[0][j];
 
-    for(int i = 1; i < rank; i++){
-        double c = 0;
-        int firstNonZero = 0;
-        for(int j = 0; j < rank; j++){
-            U[i][j] = coefs[i][j]; // FIX MEMORY LEAK ACCESSING TO NULL POSITION
-            if (!firstNonZero && coefs[i][j] != 0){
-                c = coefs[i][j]/coefs[i-1][j];
-                firstNonZero = 1;
-            }
-            //U[i][j] -= coefs[i-1][j] * c;
-            
-            // FOUND PIVOT AND ASSIGN TO L[i][j]
-        }
-    }
+    
 }
 
 int main(void) {
-    int rank = 3;
+    int rank = 5;
 
     double **coefs = calloc(rank, sizeof(double)*rank);
     double **upper = calloc(rank, sizeof(double)*rank); // FIX MEMORY LEAK ACCESSING TO NULL POSITION
@@ -44,26 +59,35 @@ int main(void) {
 
     double *consts = calloc(rank, sizeof(double));
 
-    double col1[] = {1, 2, 1}; 
-    double col2[] = {3, 8, 1}; 
-    double col3[] = {0, 4, 1}; 
+    double col0[] = {1, 2, 5, 6, -4}; 
+    double col1[] = {3, 8, 10, -3, -8}; 
+    double col2[] = {0, -4, 3, -4, }; 
+    double col3[] = {-5, 4, 1.36, 7.89, -9.69}; 
+    double col4[] = {0, -7, 2, 12, -1.5}; 
 
-    coefs[0] = (double*)&col1;
-    coefs[1] = (double*)&col2;
-    coefs[2] = (double*)&col3;
+    coefs[0] = (double*)&col0;
+    coefs[1] = (double*)&col1;
+    coefs[2] = (double*)&col2;
+    coefs[3] = (double*)&col3;
+    coefs[4] = (double*)&col4;
 
 
-    printf("before elimination: \n");
+    printf("original matrix: \n");
+    print_matrix(coefs, rank);
+
+    printf("after partial pivoting: \n");
+    partial_pivoting(coefs, rank);
     print_matrix(coefs, rank);
     
-    elimination(coefs, upper, lower, rank);
+
+    /*elimination(coefs, upper, lower, rank);
 
     printf("------------------------------\n");
     printf("after elimination: \n");
     print_matrix(coefs, rank);
     
     printf("\nupper triangle: \n");
-    print_matrix(upper, rank);
+    print_matrix(upper, rank);*/
 
     free(coefs); free(consts); free(upper); free(lower);
 }
