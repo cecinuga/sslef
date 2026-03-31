@@ -59,11 +59,11 @@ void elimination(double **coefs, double **U, double **L, const int rank){
     double elCoef = 0;
     for(int k = 0; k < rank; k++){
         for(int i = k+1; i < rank; i++){
-            elCoef = coefs[i][k]/coefs[k][k];  /* BUG: should be U[i][k]/U[k][k] */
+            elCoef = U[i][k]/U[k][k];  
             L[i][k] = elCoef;
             for(int j = k; j < rank; j++){
                 //printf("(%d, %d, %d)", i, j, k);
-                U[i][j] = coefs[i][j]-(coefs[k][j]*elCoef); /* BUG: should use U[i][j] and U[k][j] */
+                U[i][j] -= U[k][j]*elCoef; 
             }
         }
     }
@@ -102,7 +102,7 @@ int main(void) {
     for (int i = 0; i < rank; i++ )
         permutation[i] = i;
 
-    zeros(upper, rank);
+    matrix_copy(upper, coefs, rank);
     ones(lower, rank);
 
     printf("original matrix: \n");
