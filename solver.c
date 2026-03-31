@@ -50,7 +50,7 @@ void zeros(double **A, const int rank){
 
 void ones(double **A, const int rank){
     for(int i = 0; i < rank; i++){
-        A[i][i] = 0;
+        A[i][i] = 1;
     }
 }
 
@@ -117,7 +117,7 @@ void elimination(double **coefs, double **U, double **L, const int rank){
     for(int k = 0; k < rank; k++){
         for(int i = k+1; i < rank; i++){
             elCoef = coefs[i][k]/coefs[i-1][k];
-
+            L[i][k] = elCoef;
             for(int j = i-1; j < rank; j++){
                 //printf("(%d, %d, %d)", i, j, k);
                 U[i][j] = coefs[i][j]-(coefs[i-1][j]*elCoef);
@@ -165,6 +165,10 @@ int main(void) {
     printf("------------------------------\n");
     printf("\nupper triangle: \n");
     print_matrix(upper, rank);
+
+    printf("------------------------------\n");
+    printf("\nlower triangle: \n");
+    print_matrix(lower, rank);
 
     matrix_free(lower, rank); matrix_free(upper, rank);
     free(permutation); free(coefs); free(consts); 
