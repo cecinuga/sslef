@@ -40,29 +40,6 @@ void ones(double **A, const int rank){
     }
 }
 
-/* Allocate a row x col double matrix via calloc (all entries start at 0.0).
- * The outer pointer array is NULL-checked; inner row callocs are not. */
-double **matrix_alloc(const int row, const int col){
-    double **A = calloc(row, sizeof(double*));
-    if(A == NULL)
-        perror("[!] no more memory");
-
-    for (int i = 0; i < row; i++) {
-        A[i] = calloc(col, sizeof(double));
-    }
-
-    return A;
-}
-
-/* Free each row array then the outer pointer array.
- * Do NOT call on matrices whose row pointers point to stack memory. */
-void matrix_free(double **A, const int row){
-    for (int i = 0; i < row; i++) {
-        free(A[i]);
-    }
-    free(A);
-}
-
 /* Swap row pointers A[i] and A[j] in O(1) (no element copy). Asserts i,j < rank. */
 void swap_row(double **A, const int rank, const int i, const int j){
     assert(i < rank);
