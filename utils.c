@@ -1,4 +1,4 @@
-#include "utils.h"
+#include <stdio.h>
 
 void print_ivector(int *v, int rank){
     printf("[");

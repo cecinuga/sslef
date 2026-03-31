@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "linalg.h"
 
 double dabs(double a){
     if (a >= 0) return a;
@@ -43,7 +42,7 @@ double **matrix_alloc(const int row, const int col){
     return A;
 }
 
-void *matrix_free(double **A, const int row){
+void matrix_free(double **A, const int row){
     for (int i = 0; i < row; i++) { 
         free(A[i]);
     }

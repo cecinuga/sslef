@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+#include "linalg.h"
+#include "utils.h"
 
 void partial_pivoting(double **A, int *permutation, const int rank){
     int max_i = 0;
