@@ -11,9 +11,9 @@ after partial pivoting; forward/back substitution is not yet implemented.
 ```
 .
 ├── solver.c     # Entry point: partial_pivoting(), elimination()
-├── linalg.c     # Matrix/vector primitives (alloc, free, swap, init)
+├── linalg.c     # Matrix/vector primitives (swap, init)
 ├── linalg.h
-├── utils.c      # Console print helpers
+├── utils.c      # utils (alloc, free, printf)
 ├── utils.h
 └── Makefile
 ```
