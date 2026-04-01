@@ -103,6 +103,7 @@ Print a square matrix or integer vector in bracket notation.
 
 ### 3. Missing solver pipeline
 
+- [ ] **Develop test suite** — create a set of unit tests for the solver functions.
 - [ ] **Apply permutation to b** before forward substitution — `partial_pivoting`
   reorders A rows but the same permutation must be applied to b.
 - [ ] **Forward substitution** `forward_sub(L, b, y, rank)` — solve `Ly = Pb`
@@ -113,6 +114,7 @@ Print a square matrix or integer vector in bracket notation.
   matrix is singular; return an error code instead of dividing by near-zero.
 - [ ] **Residual check** — after solving, compute `||Ax - b||` to report
   solution accuracy.
+- [ ] **Develop `solve(A, b, x, rank)`** — orchestrate the full solution pipeline.
 
 ### 4. Longer-term improvements
 - [ ] Make `perm_matrix` and `perm_vect` more efficient by applying the permutation in-place
