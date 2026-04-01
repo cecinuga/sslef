@@ -15,7 +15,7 @@ double dabs(double a){
 }
 
 /* Swap v[i] and v[j] in an integer array. Asserts i,j < rank. */
-void swapi(int *v, const int rank, const int i, const int j){
+void swapi(int *v, const size_t rank, const size_t i, const size_t j){
     assert(i < rank);
     assert(j < rank);
 
@@ -25,23 +25,23 @@ void swapi(int *v, const int rank, const int i, const int j){
 }
 
 /* Set every entry of the rank x rank matrix A to 0.0. */
-void zeros(double **A, const int rank){
-    for(int i = 0; i < rank; i++){
-        for(int j = 0; j < rank; j++){
+void zeros(double **A, const size_t rank){
+    for(size_t i = 0; i < rank; i++){
+        for(size_t j = 0; j < rank; j++){
             A[i][j] = 0;
         }
     }
 }
 
 /* Set the main diagonal of A to 1.0, leaving off-diagonal entries unchanged. */
-void ones(double **A, const int rank){
-    for(int i = 0; i < rank; i++){
+void ones(double **A, const size_t rank){
+    for(size_t i = 0; i < rank; i++){
         A[i][i] = 1;
     }
 }
 
 /* Swap row pointers A[i] and A[j] in O(1) (no element copy). Asserts i,j < rank. */
-void swap_row(double **A, const int rank, const int i, const int j){
+void swap_row(double **A, const size_t rank, const size_t i, const size_t j){
     assert(i < rank);
     assert(j < rank);
 

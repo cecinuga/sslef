@@ -18,11 +18,11 @@
  * partial_pivoting -- For each column k, finds the row j >= k with the largest
  * |A[j][k]| and swaps it to position k. Records each swap in permutation[].
  */
-void partial_pivoting(double **A, int *permutation, const int rank){
+void partial_pivoting(double **A, int *permutation, const size_t rank){
     int max_i = 0;
     double max = 0;
 
-    for (int i = 0; i < rank; i++){
+    for (size_t i = 0; i < rank; i++){
         max_i = i;
         max = dabs(A[i][i]);
         for (int j = i; j < rank; j++){
@@ -51,17 +51,17 @@ void partial_pivoting(double **A, int *permutation, const int rank){
  * Also, only U[0] is pre-populated; rows 1..rank-1 of U must be copied from
  * coefs before the loop begins.
  */
-void elimination(double **coefs, double **U, double **L, const int rank){
+void elimination(double **coefs, double **U, double **L, const size_t rank){
     /* Row 0 needs no elimination: copy directly to U */
-    for(int i = 0; i < rank; i++)
+    for(size_t i = 0; i < rank; i++)
         U[0][i] = coefs[0][i];
 
     double elCoef = 0;
-    for(int k = 0; k < rank; k++){
-        for(int i = k+1; i < rank; i++){
+    for(size_t k = 0; k < rank; k++){
+        for(size_t i = k+1; i < rank; i++){
             elCoef = U[i][k]/U[k][k];  
             L[i][k] = elCoef;
-            for(int j = k; j < rank; j++){
+            for(size_t j = k; j < rank; j++){
                 //printf("(%d, %d, %d)", i, j, k);
                 U[i][j] -= U[k][j]*elCoef; 
             }
@@ -79,7 +79,7 @@ void elimination(double **coefs, double **U, double **L, const int rank){
  * consts (RHS vector b) is allocated but unused -- no solve step exists yet.
  */
 int main(void) {
-    const int rank = 5;
+    const size_t rank = 5;
 
     int *permutation = calloc(rank, sizeof(int));
     double **coefs = calloc(rank, sizeof(double*)); /* BUG: use rank, not literal 5 */
