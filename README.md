@@ -107,25 +107,6 @@ Print a square matrix or integer vector in bracket notation.
   with 1s, not setting only the diagonal.
 - [ ] Accept system input at runtime (stdin or file) instead of hard-coded arrays.
 
-### 2. Linear algebra bugs
-
-- [ ] **`elimination`: reads stale `coefs`** ([solver.c:51-53](solver.c)) —
-  the update formula must operate on the running U, not the frozen input:
-  ```c
-  /* correct Doolittle, in-place on U */
-  for(int i = 0; i < rank; i++)
-      for(int j = 0; j < rank; j++)
-          U[i][j] = coefs[i][j];          // copy full matrix first
-
-  for(int k = 0; k < rank; k++)
-      for(int i = k+1; i < rank; i++){
-          double m = U[i][k] / U[k][k];   // use U, not coefs
-          L[i][k] = m;
-          for(int j = k; j < rank; j++)
-              U[i][j] -= m * U[k][j];     // update U in place
-      }
-  ```
-
 ### 3. Missing solver pipeline
 
 - [ ] **Apply permutation to b** before forward substitution — `partial_pivoting`
