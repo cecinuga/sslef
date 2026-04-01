@@ -122,7 +122,6 @@ Print a square matrix or integer vector in bracket notation.
 
 ### 4. Longer-term improvements
 
-- [ ] Use `size_t` for dimension parameters instead of signed `int`.
 - [ ] Consider a flat `double*` + stride layout instead of `double**` for
   better cache locality on large matrices.
 - [ ] Add iterative refinement to improve floating-point accuracy.
