@@ -10,10 +10,12 @@
 double **matrix_alloc(const size_t row, const size_t col){
     double **A = calloc(row, sizeof(double*));
     if(A == NULL)
-        perror("[!] no more memory");
+        perror("[!] no more memory allocating matrix");
 
     for (size_t i = 0; i < row; i++) {
         A[i] = calloc(col, sizeof(double));
+        if(A[i] == NULL)
+            perror("[!] no more memory allocating matrix");
     }
 
     return A;
