@@ -62,7 +62,6 @@ void elimination(double **coefs, double **U, double **L, const size_t rank){
             elCoef = U[i][k]/U[k][k];  
             L[i][k] = elCoef;
             for(size_t j = k; j < rank; j++){
-                //printf("(%d, %d, %d)", i, j, k);
                 U[i][j] -= U[k][j]*elCoef; 
             }
         }
