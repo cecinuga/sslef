@@ -82,14 +82,14 @@ int main(void) {
     const int rank = 5;
 
     int *permutation = calloc(rank, sizeof(int));
-    double **coefs = calloc(5, sizeof(double*)); /* BUG: use rank, not literal 5 */
+    double **coefs = calloc(rank, sizeof(double*)); /* BUG: use rank, not literal 5 */
     double **upper = matrix_alloc(rank, rank);
     double **lower = matrix_alloc(rank, rank);
     double *consts = calloc(rank, sizeof(double)); /* unused -- no solve step */
 
     double col0[] = {1, 2, 5, 6, -4};
     double col1[] = {3, 8, 10, -3, -8};
-    double col2[] = {-4.5, -4, 3, -4, };  /* BUG: 4 elements for a 5-row matrix -- col2[4] is UB */
+    double col2[] = {-4.5, -4, 3, -4, 9.3};  /* BUG: 4 elements for a 5-row matrix -- col2[4] is UB */
     double col3[] = {-5, 4, 1.36, 7.89, -9.69};
     double col4[] = {1, -7, 2, 12, -1.5};
 
