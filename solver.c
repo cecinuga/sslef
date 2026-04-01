@@ -102,7 +102,7 @@ int main(void) {
         permutation[i] = i;
 
     matrix_copy(upper, coefs, rank);
-    ones(lower, rank);
+    eye(lower, rank);
 
     printf("original matrix: \n");
     print_matrix(coefs, rank);

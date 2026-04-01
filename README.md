@@ -73,8 +73,8 @@ in sync with `swap_row`.
 #### `swap_row(A, rank, i, j)` — [linalg.c](linalg.c)
 Exchanges row pointers `A[i]` and `A[j]` in O(1).
 
-#### `zeros(A, rank)` / `ones(A, rank)` — [linalg.c](linalg.c)
-`zeros` fills every entry with 0.0; `ones` sets the main diagonal to 1.0
+#### `zeros(A, rank)` / `eye(A, rank)` — [linalg.c](linalg.c)
+`zeros` fills every entry with 0.0; `eye` sets the main diagonal to 1.0
 (initialises L to the identity matrix).
 
 #### `matrix_alloc(row, col)` / `matrix_free(A, row)` — [linalg.c](linalg.c)
@@ -101,8 +101,7 @@ Print a square matrix or integer vector in bracket notation.
 
 - [ ] Remove or wire up `consts` — either delete the allocation or connect it
   to the forward substitution step once that is implemented.
-- [ ] Remove the dead `//printf(...)` line inside `elimination()`.
-- [ ] Rename `ones` to `set_identity` (or `eye`) — the name implies filling
+- [ ] Rename `eye` to `set_identity` (or `eye`) — the name implies filling
   with 1s, not setting only the diagonal.
 - [ ] Accept system input at runtime (stdin or file) instead of hard-coded arrays.
 

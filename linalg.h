@@ -15,7 +15,7 @@ void swapi(int *v, int rank, int i, int j);
 void zeros(double **A, int rank);
 
 /* Set the diagonal of a square matrix to one (identity) */
-void ones(double **A, int rank);
+void eye(double **A, int rank);
 
 /* Swap two rows of a square matrix */
 void swap_row(double **A, int rank, int i, int j);

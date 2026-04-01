@@ -34,7 +34,7 @@ void zeros(double **A, const size_t rank){
 }
 
 /* Set the main diagonal of A to 1.0, leaving off-diagonal entries unchanged. */
-void ones(double **A, const size_t rank){
+void eye(double **A, const size_t rank){
     for(size_t i = 0; i < rank; i++){
         A[i][i] = 1;
     }
