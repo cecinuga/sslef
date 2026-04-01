@@ -60,8 +60,7 @@ reordering can be applied to the RHS vector b.
 Doolittle LU factorization.  For each pivot column k computes multipliers
 `L[i][k] = coefs[i][k] / coefs[k][k]` and updates
 `U[i][j] = coefs[i][j] - L[i][k] * coefs[k][j]`.
-**Bug**: reads from original `coefs` at every step instead of the evolving U
-(see TODO §2).
+*Note: The previous bug where elimination() read from the original `coefs` at every step has been fixed.*
 
 #### `dabs(a)` — [linalg.c](linalg.c)
 Absolute value of a `double`; avoids the `<math.h>` / `-lm` dependency.
@@ -90,6 +89,7 @@ Print a square matrix or integer vector in bracket notation.
 - No forward or back substitution; **the system is never solved**.
 - `consts` (the RHS vector b) is allocated but never populated or used.
 - The test matrix is hard-coded; no runtime input is supported.
+- The elimination() bug has been resolved; LU factorization now updates U correctly.
 
 ---
 
