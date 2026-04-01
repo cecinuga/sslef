@@ -99,7 +99,6 @@ Print a square matrix or integer vector in bracket notation.
 
 ### 1. Code quality
 
-- [ ] NULL-check inner `calloc` calls in `matrix_alloc`.
 - [ ] Remove or wire up `consts` — either delete the allocation or connect it
   to the forward substitution step once that is implemented.
 - [ ] Remove the dead `//printf(...)` line inside `elimination()`.
