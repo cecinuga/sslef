@@ -99,7 +99,6 @@ Print a square matrix or integer vector in bracket notation.
 
 ### 1. Code quality
 
-- [ ] Replace `calloc(5, sizeof(double*))` in `main` with `calloc(rank, ...)`.
 - [ ] NULL-check inner `calloc` calls in `matrix_alloc`.
 - [ ] Remove or wire up `consts` — either delete the allocation or connect it
   to the forward substitution step once that is implemented.
@@ -109,10 +108,6 @@ Print a square matrix or integer vector in bracket notation.
 - [ ] Accept system input at runtime (stdin or file) instead of hard-coded arrays.
 
 ### 2. Linear algebra bugs
-
-- [ ] **`col2` has only 4 elements** ([solver.c:38](solver.c)) — the 5th
-  entry is missing, causing undefined behaviour on `col2[4]`.  Add the missing
-  value.
 
 - [ ] **`elimination`: reads stale `coefs`** ([solver.c:51-53](solver.c)) —
   the update formula must operate on the running U, not the frozen input:
