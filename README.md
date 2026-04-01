@@ -79,7 +79,7 @@ Exchanges row pointers `A[i]` and `A[j]` in O(1).
 #### `matrix_alloc(row, col)` / `matrix_free(A, row)` — [linalg.c](linalg.c)
 Heap-allocates / frees a `row×col` `double**` matrix via `calloc`.
 
-#### `print_matrix(A, rank)` / `print_ivector(v, rank)` — [utils.c](utils.c)
+#### `print_matrix(A, rank)` / `print_stvector(v, rank)` — [utils.c](utils.c)
 Print a square matrix or integer vector in bracket notation.
 
 ---
@@ -115,7 +115,24 @@ Print a square matrix or integer vector in bracket notation.
   solution accuracy.
 
 ### 4. Longer-term improvements
+- [ ] Make `perm_matrix` and `perm_vect` more efficient by applying the permutation in-place
+  without swapping rows multiple times.
+
+- [ ] Make LU factorization more robust to numerical instability (e.g., by using
+  scaled partial pivoting or complete pivoting).
+
+- [ ] Add support for column pivoting (complete pivoting) to improve numerical
+  stability at the cost of more complex permutation tracking.
+
+- [ ] Add support for rectangular m×n systems (m ≠ n) and/or least-squares
+  solutions via QR factorization.
 
 - [ ] Consider a flat `double*` + stride layout instead of `double**` for
   better cache locality on large matrices.
+
+- [ ] Add support for single-precision floats via `float` and `fabsf`.
+
 - [ ] Add iterative refinement to improve floating-point accuracy.
+
+- [ ] Add support for double-precision complex numbers via `double _Complex` and
+  `#include <complex.h>`.
