@@ -98,7 +98,7 @@ int main(void) {
     coefs[3] = (double*)&col3;
     coefs[4] = (double*)&col4;
 
-    for (int i = 0; i < rank; i++ )
+    for (int i = 0; i < rank; i++ ) 
         permutation[i] = i;
 
     matrix_copy(upper, coefs, rank);

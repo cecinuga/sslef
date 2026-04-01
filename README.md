@@ -87,8 +87,6 @@ Print a square matrix or integer vector in bracket notation.
 
 ## Current limitations
 
-- `elimination()` reads from the original `coefs` at every step; prior
-  elimination results are not propagated, producing wrong L and U for k ≥ 1.
 - No forward or back substitution; **the system is never solved**.
 - `consts` (the RHS vector b) is allocated but never populated or used.
 - The test matrix is hard-coded; no runtime input is supported.
