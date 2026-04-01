@@ -9,16 +9,16 @@ extern "C" {
 double dabs(double a);
 
 /* Swap two elements in an integer vector */
-void swapi(int *v, int rank, int i, int j);
+void swap_vect(int *v, size_t rank, size_t i, size_t j);
 
 /* Set all elements of a square matrix to zero */
-void zeros(double **A, int rank);
+void zeros(double **A, size_t rank);
 
 /* Set the diagonal of a square matrix to one (identity) */
-void eye(double **A, int rank);
+void eye(double **A, size_t rank);
 
 /* Swap two rows of a square matrix */
-void swap_row(double **A, int rank, int i, int j);
+void swap_row(double **A, size_t rank, size_t i, size_t j);
 
 #ifdef __cplusplus
 }

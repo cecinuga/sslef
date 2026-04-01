@@ -18,7 +18,7 @@
  * partial_pivoting -- For each column k, finds the row j >= k with the largest
  * |A[j][k]| and swaps it to position k. Records each swap in permutation[].
  */
-void partial_pivoting(double **A, int *permutation, const size_t rank){
+void partial_pivoting(double **A, size_t *permutation, const size_t rank){
     int max_i = 0;
     double max = 0;
 
@@ -26,13 +26,13 @@ void partial_pivoting(double **A, int *permutation, const size_t rank){
         max_i = i;
         max = dabs(A[i][i]);
         for (int j = i; j < rank; j++){
-            if ( dabs(A[j][i]) > max ) {
+            if ( dabs(A[j][i]) > max ){
                 max_i = j;
                 max = dabs(A[j][i]);
             }
         }
 
-        swapi(permutation, rank, i, max_i);
+        swap_vect(permutation, rank, i, max_i);
         swap_row(A, rank, i, max_i);
     }
 }
@@ -80,15 +80,15 @@ void elimination(double **coefs, double **U, double **L, const size_t rank){
 int main(void) {
     const size_t rank = 5;
 
-    int *permutation = calloc(rank, sizeof(int));
-    double **coefs = calloc(rank, sizeof(double*)); /* BUG: use rank, not literal 5 */
+    size_t *permutation = calloc(rank, sizeof(size_t));
+    double **coefs = calloc(rank, sizeof(double*)); 
     double **upper = matrix_alloc(rank, rank);
     double **lower = matrix_alloc(rank, rank);
-    double *consts = calloc(rank, sizeof(double)); /* unused -- no solve step */
+    double *consts = calloc(rank, sizeof(double)); 
 
     double col0[] = {1, 2, 5, 6, -4};
     double col1[] = {3, 8, 10, -3, -8};
-    double col2[] = {-4.5, -4, 3, -4, 9.3};  /* BUG: 4 elements for a 5-row matrix -- col2[4] is UB */
+    double col2[] = {-4.5, -4, 3, -4, 9.3}; 
     double col3[] = {-5, 4, 1.36, 7.89, -9.69};
     double col4[] = {1, -7, 2, 12, -1.5};
 
@@ -107,10 +107,12 @@ int main(void) {
     printf("original matrix: \n");
     print_matrix(coefs, rank);
 
+    printf("------------------------------\n");
     printf("\nafter partial pivoting: \n");
     partial_pivoting(coefs, permutation, rank);
     print_matrix(coefs, rank);
 
+    printf("------------------------------\n");
     printf("\npermutation flatted matrix: \n");
     print_ivector(permutation, rank);
 
