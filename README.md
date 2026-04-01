@@ -101,8 +101,6 @@ Print a square matrix or integer vector in bracket notation.
 
 - [ ] Remove or wire up `consts` — either delete the allocation or connect it
   to the forward substitution step once that is implemented.
-- [ ] Rename `eye` to `set_identity` (or `eye`) — the name implies filling
-  with 1s, not setting only the diagonal.
 - [ ] Accept system input at runtime (stdin or file) instead of hard-coded arrays.
 
 ### 3. Missing solver pipeline
