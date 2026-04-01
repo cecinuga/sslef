@@ -89,14 +89,11 @@ int main(void) {
     double col0[] = {1, 2, 5};
     double col1[] = {3, 8, 10};
     double col2[] = {-4.5, -4, 3}; 
-    double col3[] = {-5, 4, 1.36};
-    double col4[] = {1, -7, 2};
+
 
     coefs[0] = (double*)&col0;
     coefs[1] = (double*)&col1;
     coefs[2] = (double*)&col2;
-    coefs[3] = (double*)&col3;
-    coefs[4] = (double*)&col4;
 
     for (size_t i = 0; i < rank; i++ ) 
         permutation[i] = i;
@@ -133,8 +130,8 @@ int main(void) {
     printf("\nlower triangle: \n");
     print_matrix(lower, rank);
 
-    free(permutation); free(consts);
-    matrix_free(coefs, rank); matrix_free(lower, rank); matrix_free(upper, rank);
+    free(coefs); free(permutation); free(consts);
+    matrix_free(lower, rank); matrix_free(upper, rank);
 
     return 0;
 }

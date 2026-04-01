@@ -37,7 +37,7 @@ void swap_vect(size_t *v, const size_t rank, const size_t i, const size_t j){
 
 /* Apply permutation matrix to another matrix, the permutation matrix must be flatted. */
 void perm_matrix(double **A, size_t *perm, const size_t rank){
-    for(size_t i = 0; i < rank; i+=2)
+    for(size_t i = 0; i < rank; i++)
         swap_row(A, rank, i, perm[i]);
 }
 
