@@ -36,11 +36,10 @@ void matrix_copy(double **dest, double **src, const size_t rank){
             dest[i][j] = src[i][j];
 }
 
-/* Print an integer array of length rank as [a,b,c,...]. */
-void print_ivector(int *v, size_t rank){
+void print_stvector(size_t *v, size_t rank){
     printf("[");
     for(size_t i = 0; i < rank; i++){
-        printf("%d", v[i]);
+        printf("%lu", v[i]);
         if(i < rank-1) printf(",");
     }
     printf("]\n");

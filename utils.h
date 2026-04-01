@@ -5,19 +5,19 @@
 extern "C" {
 #endif
 
-/* Print an integer vector */
-void print_ivector(int *v, int rank);
+/* Print an size_t vector */
+void print_stvector(size_t *v, size_t rank);
 
 /* Print a square matrix */
-void print_matrix(double **A, int rank);
+void print_matrix(double **A, size_t rank);
 
-void matrix_copy(double **dest, double **src, const int rank);
+void matrix_copy(double **dest, double **src, const size_t rank);
 
 /* Allocate a row x col matrix; caller must free with matrix_free() */
-double **matrix_alloc(int row, int col);
+double **matrix_alloc(size_t row, size_t col);
 
 /* Free a matrix allocated by matrix_alloc() */
-void matrix_free(double **A, int row);
+void matrix_free(double **A, size_t row);
 
 #ifdef __cplusplus
 }
