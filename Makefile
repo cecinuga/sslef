@@ -1,7 +1,8 @@
 CC      = gcc
 CFLAGS  = -Wall -Wextra -g
 TARGET  = build/solver
-SRCS    = solver.c linalg.c utils.c
+LIBS    = linalg.c utils.c
+SRCS    = solver.c $(LIBS)
 OBJS    = $(SRCS:%.c=build/%.o)
 
 all: build $(TARGET) symlink
@@ -21,7 +22,11 @@ symlink:
 		echo "Symbolic link 'solver' created."; \
 	fi
 
-clean:
+test: build
+	$(CC) $(CFLAGS) -o build/test test.c $(LIBS)
+	./build/test
+
+clear:
 	rm -rf build solver
 
-.PHONY: all symlink clean
+.PHONY: all symlink clear test
