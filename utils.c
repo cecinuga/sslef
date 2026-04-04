@@ -19,7 +19,7 @@ double **mmalloc(const size_t row, const size_t col){
     return A;
 }
 
-double *vmalloc(const size_t length){
+double *vtmalloc(const size_t length){
     double *v = calloc(length, sizeof(double));
     if(v == NULL)
         perror("[!] no more memory allocating matrix");
