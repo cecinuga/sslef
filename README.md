@@ -78,7 +78,8 @@ Applies a flattened permutation vector to another vector.
 
 #### `mmmul(A, B, out, dim)` — [linalg.c](linalg.c)
 Square matrix × matrix multiplication. Accumulates into scalar `c` before
-writing; safe when `out == A` but not when `out == B`.
+writing; **not aliasing-safe** — `out == A` corrupts same-row reads, `out == B`
+corrupts same-column reads across rows.
 
 #### `mcmul(A, v, out, dim)` — [linalg.c](linalg.c)
 Matrix × column vector multiplication. Uses an internal buffer to allow
@@ -110,7 +111,7 @@ Generic `_Generic` macros dispatching to type-specific implementations
 ## TODO
 
 ### 0. Immediate fixes
-- [ ] Fix aliasing bug in `mmmul` when `out == B`
+- [ ] Fix aliasing bug in `mmmul` when `out == A` or `out == B`
 
 ### 1. Code quality
 - [ ] Accept system input at runtime (stdin or file) instead of hard-coded arrays.
