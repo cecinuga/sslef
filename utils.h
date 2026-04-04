@@ -8,6 +8,7 @@ extern "C" {
 /* Allocate a row x col double matrix via calloc (all entries start at 0.0).
  * The outer pointer array is NULL-checked; inner row callocs are not. */
 double **mmalloc(size_t row, size_t col);
+double *vmalloc(const size_t length);
 
 /* Free each row array then the outer pointer array.
  * Do NOT call on matrices whose row pointers point to stack memory. */

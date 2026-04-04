@@ -19,6 +19,14 @@ double **mmalloc(const size_t row, const size_t col){
     return A;
 }
 
+double *vmalloc(const size_t length){
+    double *v = calloc(length, sizeof(double));
+    if(v == NULL)
+        perror("[!] no more memory allocating matrix");
+
+    return v;
+}
+
 void mfree(double **A, const size_t row){
     for (size_t i = 0; i < row; i++) {
         free(A[i]);
