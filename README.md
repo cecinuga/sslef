@@ -10,7 +10,7 @@ after partial pivoting; forward/back substitution is not yet implemented.
 
 ```
 .
-├── solver.c     # Entry point: partial_pivoting(), elimination()
+├── solver.c     # Entry point: pivoting(), elimination()
 ├── linalg.c     # Matrix/vector primitives (swap, init)
 ├── linalg.h
 ├── utils.c      # utils (alloc, free, printf)
@@ -51,7 +51,7 @@ Steps 1 and 2 are not yet implemented.
 
 ## Functions
 
-#### `partial_pivoting(A, permutation, dim)` — [solver.c](solver.c)
+#### `pivoting(A, permutation, dim)` — [solver.c](solver.c)
 For each column k, finds the row j ≥ k with maximum `|A[j][k]|` and swaps it
 to the diagonal position.  Records swaps in `permutation[]` so the same
 reordering can be applied to the RHS vector b.
@@ -89,7 +89,6 @@ Print a square matrix or integer vector in bracket notation.
 - No forward or back substitution; **the system is never solved**.
 - `consts` (the RHS vector b) is allocated but never populated or used.
 - The test matrix is hard-coded; no runtime input is supported.
-- The elimination() bug has been resolved; LU factorization now updates U correctly.
 
 ---
 
@@ -104,7 +103,7 @@ Print a square matrix or integer vector in bracket notation.
 ### 3. Missing solver pipeline
 
 - [ ] **Develop test suite** — create a set of unit tests for the solver functions.
-- [ ] **Apply permutation to b** before forward substitution — `partial_pivoting`
+- [ ] **Apply permutation to b** before forward substitution — `pivoting`
   reorders A rows but the same permutation must be applied to b.
 - [ ] **Forward substitution** `forward_sub(L, b, y, dim)` — solve `Ly = Pb`
   exploiting the unit lower-triangular structure (no diagonal division needed).
