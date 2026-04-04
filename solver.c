@@ -32,8 +32,8 @@ void partial_pivoting(double **A, size_t *permutation, const size_t dim){
             }
         }
 
-        swap_vect(permutation, dim, i, max_i);
-        swap_row(A, dim, i, max_i);
+        swap(permutation, dim, i, max_i);
+        swapr(A, dim, i, max_i);
     }
 }
 
@@ -82,8 +82,8 @@ int main(void) {
 
     size_t *permutation = calloc(dim, sizeof(size_t));
     double **coefs = calloc(dim, sizeof(double*)); 
-    double **upper = matrix_alloc(dim, dim);
-    double **lower = matrix_alloc(dim, dim);
+    double **upper = mmalloc(dim, dim);
+    double **lower = mmalloc(dim, dim);
     double *consts = calloc(dim, sizeof(double)); 
 
     double col0[] = {1, 2, 5};
@@ -98,40 +98,40 @@ int main(void) {
     for (size_t i = 0; i < dim; i++ ) 
         permutation[i] = i;
 
-    matrix_copy(upper, coefs, dim);
+    mcopy(upper, coefs, dim);
     eye(lower, dim);
 
     printf("original matrix: \n");
-    print_matrix(coefs, dim);
+    printm(coefs, dim);
 
     printf("permutation flatten matrix: \n");
-    print_stvector(permutation, dim);
+    printv(permutation, dim);
 
     printf("applied permutation matrix: \n");
-    perm_matrix(coefs, permutation, dim);
-    print_matrix(coefs, dim);
+    permm(coefs, permutation, dim);
+    printm(coefs, dim);
 
     printf("------------------------------\n");
     printf("\nafter partial pivoting: \n");
     partial_pivoting(coefs, permutation, dim);
-    print_matrix(coefs, dim);
+    printm(coefs, dim);
 
     printf("------------------------------\n");
     printf("\npermutation flatted matrix: \n");
-    print_stvector(permutation, dim);
+    printv(permutation, dim);
 
     elimination(coefs, upper, lower, dim);
 
     printf("------------------------------\n");
     printf("\nupper triangle: \n");
-    print_matrix(upper, dim);
+    printm(upper, dim);
 
     printf("------------------------------\n");
     printf("\nlower triangle: \n");
-    print_matrix(lower, dim);
+    printm(lower, dim);
 
     free(coefs); free(permutation); free(consts);
-    matrix_free(lower, dim); matrix_free(upper, dim);
+    mfree(lower, dim); mfree(upper, dim);
 
     return 0;
 }
