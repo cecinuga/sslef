@@ -5,9 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* Allocate a row x col double matrix via calloc (all entries start at 0.0).
- * The outer pointer array is NULL-checked; inner row callocs are not. */
-double **matrix_alloc(const size_t row, const size_t col){
+double **mmalloc(const size_t row, const size_t col){
     double **A = calloc(row, sizeof(double*));
     if(A == NULL)
         perror("[!] no more memory allocating matrix");
@@ -21,38 +19,68 @@ double **matrix_alloc(const size_t row, const size_t col){
     return A;
 }
 
-/* Free each row array then the outer pointer array.
- * Do NOT call on matrices whose row pointers point to stack memory. */
-void matrix_free(double **A, const size_t row){
+void mfree(double **A, const size_t row){
     for (size_t i = 0; i < row; i++) {
         free(A[i]);
     }
     free(A);
 }
 
-void matrix_copy(double **dest, double **src, const size_t dim){
+void mcopy(double **dest, double **src, const size_t dim){
     for (size_t i = 0; i < dim; i++)
         for(size_t j = 0; j < dim; j++)
             dest[i][j] = src[i][j];
 }
 
-void print_stvector(size_t *v, size_t dim){
+/* --- printv --- */
+
+void printv_sz(size_t *v, size_t dim){
     printf("[");
     for(size_t i = 0; i < dim; i++){
-        printf("%lu", v[i]);
+        printf("%zu", v[i]);
         if(i < dim-1) printf(",");
     }
     printf("]\n");
 }
 
-/* Print a dim x dim double matrix in nested-bracket notation.
- * Assumes a square matrix; a separate column count is not supported. */
-void print_matrix(double **A, size_t dim){
+void printv_int(int *v, size_t dim){
+    printf("[");
+    for(size_t i = 0; i < dim; i++){
+        printf("%d", v[i]);
+        if(i < dim-1) printf(",");
+    }
+    printf("]\n");
+}
+
+void printv_dbl(double *v, size_t dim){
+    printf("[");
+    for(size_t i = 0; i < dim; i++){
+        printf("%lf", v[i]);
+        if(i < dim-1) printf(",");
+    }
+    printf("]\n");
+}
+
+/* --- printm --- */
+
+void printm_dbl(double **A, size_t dim){
     printf("[");
     for(size_t i = 0; i < dim; i++){
         if(i>0) printf(" ");
         printf("[ ");
         for(size_t j = 0; j < dim; j++) printf("%lf ", A[i][j]);
+        printf("]");
+        if(i < dim-1) printf(",\n");
+    }
+    printf("]\n");
+}
+
+void printm_int(int **A, size_t dim){
+    printf("[");
+    for(size_t i = 0; i < dim; i++){
+        if(i>0) printf(" ");
+        printf("[ ");
+        for(size_t j = 0; j < dim; j++) printf("%d ", A[i][j]);
         printf("]");
         if(i < dim-1) printf(",\n");
     }

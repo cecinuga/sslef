@@ -9,22 +9,28 @@ extern "C" {
 double dabs(double a);
 
 /* Swap two elements in an integer vector */
-void swap_vect(size_t *v, size_t dim, size_t i, size_t j);
-
-/* Set all elements of a square matrix to zero */
-void zeros(double **A, size_t dim);
-
-/* Set the diagonal of a square matrix to one (identity) */
-void eye(double **A, size_t dim);
+void swap(size_t *v, const size_t dim, const size_t i, const size_t j);
 
 /* Swap two rows of a square matrix */
-void swap_row(double **A, size_t dim, size_t i, size_t j);
+void swapr(double **A, const size_t dim, const size_t i, const size_t j);
 
 /* Apply permutation matrix to another matrix, the permutation matrix must be flatted. */
-void perm_matrix(double **A, size_t *perm, const size_t dim);
+void permm(double **A, size_t *perm, const size_t dim);
 
 /* Apply permutation matrix to a vector, the permutation matrix must be flatted. */
-void perm_vect(size_t *v, size_t *perm, const size_t length);
+void permv(size_t *v, size_t *perm, const size_t length);
+
+/* Set all elements of a square matrix to zero */
+void zeros(double **A, const size_t dim);
+
+/* Set the diagonal of a square matrix to one (identity) */
+void eye(double **A, const size_t dim);
+
+/* Perform matrix by matrix multiplication (only square matrix) */
+void mmmul(double **A, double **B, double **out, const size_t dim);
+
+/* Perform matrix by column multiplication (only square matrix) */
+void mcmul(double **A, double *v, double *out, const size_t dim);
 
 #ifdef __cplusplus
 }
