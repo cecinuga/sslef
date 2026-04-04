@@ -6,12 +6,12 @@ extern "C" {
 #endif
 
 /* Print an size_t vector */
-void print_stvector(size_t *v, size_t rank);
+void print_stvector(size_t *v, size_t dim);
 
 /* Print a square matrix */
-void print_matrix(double **A, size_t rank);
+void print_matrix(double **A, size_t dim);
 
-void matrix_copy(double **dest, double **src, const size_t rank);
+void matrix_copy(double **dest, double **src, const size_t dim);
 
 /* Allocate a row x col matrix; caller must free with matrix_free() */
 double **matrix_alloc(size_t row, size_t col);

@@ -51,12 +51,12 @@ Steps 1 and 2 are not yet implemented.
 
 ## Functions
 
-#### `partial_pivoting(A, permutation, rank)` — [solver.c](solver.c)
+#### `partial_pivoting(A, permutation, dim)` — [solver.c](solver.c)
 For each column k, finds the row j ≥ k with maximum `|A[j][k]|` and swaps it
 to the diagonal position.  Records swaps in `permutation[]` so the same
 reordering can be applied to the RHS vector b.
 
-#### `elimination(coefs, U, L, rank)` — [solver.c](solver.c)
+#### `elimination(coefs, U, L, dim)` — [solver.c](solver.c)
 Doolittle LU factorization.  For each pivot column k computes multipliers
 `L[i][k] = coefs[i][k] / coefs[k][k]` and updates
 `U[i][j] = coefs[i][j] - L[i][k] * coefs[k][j]`.
@@ -65,21 +65,21 @@ Doolittle LU factorization.  For each pivot column k computes multipliers
 #### `dabs(a)` — [linalg.c](linalg.c)
 Absolute value of a `double`; avoids the `<math.h>` / `-lm` dependency.
 
-#### `swapi(v, rank, i, j)` — [linalg.c](linalg.c)
+#### `swapi(v, dim, i, j)` — [linalg.c](linalg.c)
 Swaps `v[i]` and `v[j]` in an integer array.  Keeps the permutation vector
 in sync with `swap_row`.
 
-#### `swap_row(A, rank, i, j)` — [linalg.c](linalg.c)
+#### `swap_row(A, dim, i, j)` — [linalg.c](linalg.c)
 Exchanges row pointers `A[i]` and `A[j]` in O(1).
 
-#### `zeros(A, rank)` / `eye(A, rank)` — [linalg.c](linalg.c)
+#### `zeros(A, dim)` / `eye(A, dim)` — [linalg.c](linalg.c)
 `zeros` fills every entry with 0.0; `eye` sets the main diagonal to 1.0
 (initialises L to the identity matrix).
 
 #### `matrix_alloc(row, col)` / `matrix_free(A, row)` — [linalg.c](linalg.c)
 Heap-allocates / frees a `row×col` `double**` matrix via `calloc`.
 
-#### `print_matrix(A, rank)` / `print_stvector(v, rank)` — [utils.c](utils.c)
+#### `print_matrix(A, dim)` / `print_stvector(v, dim)` — [utils.c](utils.c)
 Print a square matrix or integer vector in bracket notation.
 
 ---
@@ -106,15 +106,15 @@ Print a square matrix or integer vector in bracket notation.
 - [ ] **Develop test suite** — create a set of unit tests for the solver functions.
 - [ ] **Apply permutation to b** before forward substitution — `partial_pivoting`
   reorders A rows but the same permutation must be applied to b.
-- [ ] **Forward substitution** `forward_sub(L, b, y, rank)` — solve `Ly = Pb`
+- [ ] **Forward substitution** `forward_sub(L, b, y, dim)` — solve `Ly = Pb`
   exploiting the unit lower-triangular structure (no diagonal division needed).
-- [ ] **Back substitution** `back_sub(U, y, x, rank)` — solve `Ux = y` from
+- [ ] **Back substitution** `back_sub(U, y, x, dim)` — solve `Ux = y` from
   the last row upward.
 - [ ] **Near-zero pivot guard** — if `|U[k][k]| < eps` after pivoting the
   matrix is singular; return an error code instead of dividing by near-zero.
 - [ ] **Residual check** — after solving, compute `||Ax - b||` to report
   solution accuracy.
-- [ ] **Develop `solve(A, b, x, rank)`** — orchestrate the full solution pipeline.
+- [ ] **Develop `solve(A, b, x, dim)`** — orchestrate the full solution pipeline.
 
 ### 4. Longer-term improvements
 - [ ] Make `perm_matrix` and `perm_vect` more efficient by applying the permutation in-place

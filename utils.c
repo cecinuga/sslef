@@ -30,31 +30,31 @@ void matrix_free(double **A, const size_t row){
     free(A);
 }
 
-void matrix_copy(double **dest, double **src, const size_t rank){
-    for (size_t i = 0; i < rank; i++)
-        for(size_t j = 0; j < rank; j++)
+void matrix_copy(double **dest, double **src, const size_t dim){
+    for (size_t i = 0; i < dim; i++)
+        for(size_t j = 0; j < dim; j++)
             dest[i][j] = src[i][j];
 }
 
-void print_stvector(size_t *v, size_t rank){
+void print_stvector(size_t *v, size_t dim){
     printf("[");
-    for(size_t i = 0; i < rank; i++){
+    for(size_t i = 0; i < dim; i++){
         printf("%lu", v[i]);
-        if(i < rank-1) printf(",");
+        if(i < dim-1) printf(",");
     }
     printf("]\n");
 }
 
-/* Print a rank x rank double matrix in nested-bracket notation.
+/* Print a dim x dim double matrix in nested-bracket notation.
  * Assumes a square matrix; a separate column count is not supported. */
-void print_matrix(double **A, size_t rank){
+void print_matrix(double **A, size_t dim){
     printf("[");
-    for(size_t i = 0; i < rank; i++){
+    for(size_t i = 0; i < dim; i++){
         if(i>0) printf(" ");
         printf("[ ");
-        for(size_t j = 0; j < rank; j++) printf("%lf ", A[i][j]);
+        for(size_t j = 0; j < dim; j++) printf("%lf ", A[i][j]);
         printf("]");
-        if(i < rank-1) printf(",\n");
+        if(i < dim-1) printf(",\n");
     }
     printf("]\n");
 }
