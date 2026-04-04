@@ -1,7 +1,7 @@
 /*
  * solver.c -- Entry point and high-level solver routines.
  *
- * partial_pivoting() -- row-permutation step of PA = LU
+ * pivoting() -- row-permutation step of PA = LU
  * elimination()      -- Doolittle LU factorization (stale-coefs bug remains)
  * main()             -- hard-coded 5x5 test, prints pivoted A, L, and U
  *
@@ -15,10 +15,10 @@
 #include "utils.h"
 
 /*
- * partial_pivoting -- For each column k, finds the row j >= k with the largest
+ * pivoting -- For each column k, finds the row j >= k with the largest
  * |A[j][k]| and swaps it to position k. Records each swap in permutation[].
  */
-void partial_pivoting(double **A, size_t *permutation, const size_t dim){
+void pivoting(double **A, size_t *permutation, const size_t dim){
     int max_i = 0;
     double max = 0;
 
@@ -51,10 +51,9 @@ void partial_pivoting(double **A, size_t *permutation, const size_t dim){
  * Also, only U[0] is pre-populated; rows 1..dim-1 of U must be copied from
  * coefs before the loop begins.
  */
-void elimination(double **coefs, double **U, double **L, const size_t dim){
-    /* Row 0 needs no elimination: copy directly to U */
-    for(size_t i = 0; i < dim; i++)
-        U[0][i] = coefs[0][i];
+void elimination(double **A, double **U, double **L, const size_t dim){
+    /* Copy all rows of coefs (post-pivoting) into U before factoring */
+    mcopy(U, A, dim);
 
     double elCoef = 0;
     for(size_t k = 0; k < dim; k++){
@@ -86,10 +85,11 @@ int main(void) {
     double **lower = mmalloc(dim, dim);
     double *consts = calloc(dim, sizeof(double)); 
 
+    consts[0] = 1; consts[1] = 2; consts[2] = 3;
+
     double col0[] = {1, 2, 5};
     double col1[] = {3, 8, 10};
     double col2[] = {-4.5, -4, 3}; 
-
 
     coefs[0] = (double*)&col0;
     coefs[1] = (double*)&col1;
@@ -98,22 +98,14 @@ int main(void) {
     for (size_t i = 0; i < dim; i++ ) 
         permutation[i] = i;
 
-    mcopy(upper, coefs, dim);
     eye(lower, dim);
 
     printf("original matrix: \n");
     printm(coefs, dim);
 
-    printf("permutation flatten matrix: \n");
-    printv(permutation, dim);
-
-    printf("applied permutation matrix: \n");
-    permm(coefs, permutation, dim);
-    printm(coefs, dim);
-
     printf("------------------------------\n");
     printf("\nafter partial pivoting: \n");
-    partial_pivoting(coefs, permutation, dim);
+    pivoting(coefs, permutation, dim);
     printm(coefs, dim);
 
     printf("------------------------------\n");
@@ -129,6 +121,14 @@ int main(void) {
     printf("------------------------------\n");
     printf("\nlower triangle: \n");
     printm(lower, dim);
+
+    printf("\n before L multiplication: \n");
+    printv(consts, dim);
+    mcmul(lower, consts, consts, dim);
+
+    printf("\n after L multiplication: \n");
+    printv(consts, dim);
+
 
     free(coefs); free(permutation); free(consts);
     mfree(lower, dim); mfree(upper, dim);

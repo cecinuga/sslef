@@ -70,7 +70,7 @@ void mmmul(double **A, double **B, double **out, const size_t dim){
 }
 
 void mcmul(double **A, double *v, double *out, const size_t dim){
-    double c = 0;
+    double *buf = vmalloc(dim);
     for(size_t i = 0; i < dim; i++){
         c = 0;
         for(size_t j = 0; j < dim; j++){
