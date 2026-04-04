@@ -1,8 +1,7 @@
 # sslef — Solve System of Linear Equations via Factorization
 
 A C implementation of LU (lower-upper) matrix factorization for solving square
-systems of linear equations **Ax = b**.  The factorization step works correctly
-after partial pivoting; forward/back substitution is not yet implemented.
+systems of linear equations **Ax = b**.
 
 ---
 
@@ -10,11 +9,11 @@ after partial pivoting; forward/back substitution is not yet implemented.
 
 ```
 .
-├── solver.c     # Entry point: pivoting(), elimination()
-├── linalg.c     # Matrix/vector primitives (swap, init)
+├── solver.c     # Entry point: pivoting(), elimination(), main()
+├── linalg.c     # Matrix/vector primitives (swaps, init, multiply)
 ├── linalg.h
-├── utils.c      # utils (alloc, free, printf)
-├── utils.h
+├── utils.c      # Alloc, free, copy, print helpers
+├── utils.h      # Generic printv/printm macros
 └── Makefile
 ```
 
@@ -27,18 +26,18 @@ make          # compiles to build/solver and creates a ./solver symlink
 make clean    # removes build/ and the symlink
 ```
 
-Requires GCC.  Flags: `-Wall -Wextra -g`.
+Requires GCC. Flags: `-Wall -Wextra -g`.
 
 ---
 
 ## Algorithm
 
-The goal is **PA = LU** decomposition of an n×n matrix A:
+Goal: **PA = LU** decomposition of an n×n matrix A.
 
 | Symbol | Meaning |
 |--------|---------|
-| **P**  | Permutation matrix encoding row swaps from partial pivoting |
-| **L**  | Unit lower-triangular matrix (diagonal = 1, Doolittle form) |
+| **P**  | Permutation matrix (row swaps from partial pivoting) |
+| **L**  | Unit lower-triangular (diagonal = 1, Doolittle form) |
 | **U**  | Upper-triangular matrix |
 
 Once L and U are known, **Ax = b** is solved in two steps:
@@ -52,91 +51,80 @@ Steps 1 and 2 are not yet implemented.
 ## Functions
 
 #### `pivoting(A, permutation, dim)` — [solver.c](solver.c)
-For each column k, finds the row j ≥ k with maximum `|A[j][k]|` and swaps it
-to the diagonal position.  Records swaps in `permutation[]` so the same
-reordering can be applied to the RHS vector b.
+For each column k, finds row j ≥ k with maximum `|A[j][k]|` and swaps it to
+position k. Records swaps in `permutation[]`.
 
-#### `elimination(coefs, U, L, dim)` — [solver.c](solver.c)
-Doolittle LU factorization.  For each pivot column k computes multipliers
-`L[i][k] = coefs[i][k] / coefs[k][k]` and updates
-`U[i][j] = coefs[i][j] - L[i][k] * coefs[k][j]`.
-*Note: The previous bug where elimination() read from the original `coefs` at every step has been fixed.*
+#### `elimination(A, U, L, dim)` — [solver.c](solver.c)
+Doolittle LU factorization. Copies A into U first, then for each pivot column k:
+`L[i][k] = U[i][k] / U[k][k]` and `U[i][j] -= L[i][k] * U[k][j]`.
 
 #### `dabs(a)` — [linalg.c](linalg.c)
 Absolute value of a `double`; avoids the `<math.h>` / `-lm` dependency.
 
-#### `swapi(v, dim, i, j)` — [linalg.c](linalg.c)
-Swaps `v[i]` and `v[j]` in an integer array.  Keeps the permutation vector
-in sync with `swap_row`.
+#### `swap(v, dim, i, j)` — [linalg.c](linalg.c)
+Swaps `v[i]` and `v[j]` in a `size_t` array (keeps permutation vector in sync).
 
-#### `swap_row(A, dim, i, j)` — [linalg.c](linalg.c)
+#### `swapr(A, dim, i, j)` — [linalg.c](linalg.c)
 Exchanges row pointers `A[i]` and `A[j]` in O(1).
 
-#### `zeros(A, dim)` / `eye(A, dim)` — [linalg.c](linalg.c)
-`zeros` fills every entry with 0.0; `eye` sets the main diagonal to 1.0
-(initialises L to the identity matrix).
+#### `permm(A, perm, dim)` — [linalg.c](linalg.c)
+Applies a flattened permutation vector to a matrix by swapping rows.
 
-#### `matrix_alloc(row, col)` / `matrix_free(A, row)` — [linalg.c](linalg.c)
+#### `permv(v, perm, length)` — [linalg.c](linalg.c)
+Applies a flattened permutation vector to another vector.
+
+#### `zeros(A, dim)` / `eye(A, dim)` — [linalg.c](linalg.c)
+`zeros` fills every entry with 0.0; `eye` sets the main diagonal to 1.0.
+
+#### `mmmul(A, B, out, dim)` — [linalg.c](linalg.c)
+Square matrix × matrix multiplication. Accumulates into scalar `c` before
+writing; safe when `out == A` but not when `out == B`.
+
+#### `mcmul(A, v, out, dim)` — [linalg.c](linalg.c)
+Matrix × column vector multiplication. Uses an internal buffer to allow
+`out == v` (aliasing-safe).
+
+#### `mmalloc(row, col)` / `mfree(A, row)` — [utils.c](utils.c)
 Heap-allocates / frees a `row×col` `double**` matrix via `calloc`.
 
-#### `print_matrix(A, dim)` / `print_stvector(v, dim)` — [utils.c](utils.c)
-Print a square matrix or integer vector in bracket notation.
+#### `vtmalloc(length)` — [utils.c](utils.c)
+Heap-allocates a `double*` vector via `calloc`.
+
+#### `mcopy(dest, src, dim)` — [utils.c](utils.c)
+Element-wise copy of a square matrix.
+
+#### `printv(v, dim)` / `printm(A, dim)` — [utils.h](utils.h)
+Generic `_Generic` macros dispatching to type-specific implementations
+(`printv_sz`, `printv_int`, `printv_dbl`, `printm_dbl`, `printm_int`) in
+[utils.c](utils.c). Print in bracket notation.
 
 ---
 
 ## Current limitations
 
-- No forward or back substitution; **the system is never solved**.
-- `consts` (the RHS vector b) is allocated but never populated or used.
-- The test matrix is hard-coded; no runtime input is supported.
+- No forward or back substitution; **the system is factored but not solved**.
+- The test matrix and RHS vector are hard-coded; no runtime input supported.
 
 ---
 
 ## TODO
 
 ### 0. Immediate fixes
-- [ ] Fix aliasing bug in `mmmul` using row and col buffer 
+- [ ] Fix aliasing bug in `mmmul` when `out == B`
 
 ### 1. Code quality
-
-- [ ] Remove or wire up `consts` — either delete the allocation or connect it
-  to the forward substitution step once that is implemented.
 - [ ] Accept system input at runtime (stdin or file) instead of hard-coded arrays.
 
-### 3. Missing solver pipeline
+### 2. Missing solver pipeline
 
-- [ ] **Develop test suite** — create a set of unit tests for the solver functions.
-- [ ] **Apply permutation to b** before forward substitution — `pivoting`
-  reorders A rows but the same permutation must be applied to b.
-- [ ] **Forward substitution** `forward_sub(L, b, y, dim)` — solve `Ly = Pb`
-  exploiting the unit lower-triangular structure (no diagonal division needed).
-- [ ] **Back substitution** `back_sub(U, y, x, dim)` — solve `Ux = y` from
-  the last row upward.
-- [ ] **Near-zero pivot guard** — if `|U[k][k]| < eps` after pivoting the
-  matrix is singular; return an error code instead of dividing by near-zero.
-- [ ] **Residual check** — after solving, compute `||Ax - b||` to report
-  solution accuracy.
-- [ ] **Develop `solve(A, b, x, dim)`** — orchestrate the full solution pipeline.
+- [ ] **Develop test suite** — unit tests for solver functions.
+- [ ] **Forward substitution** `forward_sub(L, b, y, dim)` — solve `Ly = Pb`.
+- [ ] **Back substitution** `back_sub(U, y, x, dim)` — solve `Ux = y`.
+- [ ] **Near-zero pivot guard** — return error if `|U[k][k]| < eps` (singular matrix).
+- [ ] **Residual check** — compute `||Ax - b||` after solving.
+- [ ] **`solve(A, b, x, dim)`** — orchestrate the full pipeline.
 
-### 4. Longer-term improvements
-- [ ] Make `perm_matrix` and `perm_vect` more efficient by applying the permutation in-place
-  without swapping rows multiple times.
-
-- [ ] Make LU factorization more robust to numerical instability (e.g., by using
-  scaled partial pivoting or complete pivoting).
-
-- [ ] Add support for column pivoting (complete pivoting) to improve numerical
-  stability at the cost of more complex permutation tracking.
-
-- [ ] Add support for rectangular m×n systems (m ≠ n) and/or least-squares
-  solutions via QR factorization.
-
-- [ ] Consider a flat `double*` + stride layout instead of `double**` for
-  better cache locality on large matrices.
-
-- [ ] Add support for single-precision floats via `float` and `fabsf`.
-
-- [ ] Add iterative refinement to improve floating-point accuracy.
-
-- [ ] Add support for double-precision complex numbers via `double _Complex` and
-  `#include <complex.h>`.
+### 3. Longer-term improvements
+- [ ] Scaled partial pivoting or complete pivoting for better numerical stability.
+- [ ] Flat `double*` + stride layout instead of `double**` for cache locality.
+- [ ] Iterative refinement to improve floating-point accuracy.
