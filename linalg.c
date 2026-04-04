@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+#include "utils.h"
 
 double dabs(double a){
     if (a >= 0) return a;
@@ -70,12 +71,14 @@ void mmmul(double **A, double **B, double **out, const size_t dim){
 }
 
 void mcmul(double **A, double *v, double *out, const size_t dim){
-    double *buf = vmalloc(dim);
+    double *buf = vtmalloc(dim);
+    memcpy(buf, v, dim * sizeof(double));
+
     for(size_t i = 0; i < dim; i++){
-        c = 0;
+        out[i] = 0;
         for(size_t j = 0; j < dim; j++){
-            c += A[i][j] * v[j];
+            out[i] += A[i][j] * buf[j];
         }
-        out[i] = c;
     }
+    free(buf);
 }
