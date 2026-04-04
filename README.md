@@ -94,6 +94,9 @@ Print a square matrix or integer vector in bracket notation.
 
 ## TODO
 
+### 0. Immediate fixes
+- [ ] Fix aliasing bug in `mmmul` using row and col buffer 
+
 ### 1. Code quality
 
 - [ ] Remove or wire up `consts` — either delete the allocation or connect it
