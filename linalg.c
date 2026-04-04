@@ -51,9 +51,9 @@ void zeros(double **A, const size_t dim){
 }
 
 void eye(double **A, const size_t dim){
-    for(size_t i = 0; i < dim; i++){
-        A[i][i] = 1;
-    }
+    for(size_t i = 0; i < dim; i++)
+        for(size_t j = 0; j < dim; j++)
+            A[i][j] = (i == j) ? 1.0 : 0.0;
 }
 
 void mmmul(double **A, double **B, double **out, const size_t dim){
