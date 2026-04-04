@@ -45,7 +45,6 @@ void pivoting(double **A, size_t *permutation, const size_t dim){
  *   L[i][k] = coefs[i][k] / coefs[k][k]              (row multiplier)
  *   U[i][j] = coefs[i][j] - L[i][k] * coefs[k][j]    (Schur update)
  *
- * BUG: reads original `coefs` at every step instead of the evolving U.
  * For k >= 1, coefs[i][k] and coefs[k][j] no longer reflect prior elimination
  * steps; the algorithm must use U[i][k] / U[k][k] and U[i][j] - L[i][k]*U[k][j].
  * Also, only U[0] is pre-populated; rows 1..dim-1 of U must be copied from
@@ -128,7 +127,6 @@ int main(void) {
 
     printf("\n after L multiplication: \n");
     printv(consts, dim);
-
 
     free(coefs); free(permutation); free(consts);
     mfree(lower, dim); mfree(upper, dim);
