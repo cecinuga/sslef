@@ -60,7 +60,6 @@ void elimination(double **A, double **U, double **L, double *rhs, const size_t d
         for(size_t i = k+1; i < dim; i++){
             elCoef = U[i][k]/U[k][k];  
             L[i][k] = elCoef;
-            rhs[i] -= rhs[k]*elCoef;
 
             for(size_t j = k; j < dim; j++){
                 U[i][j] -= U[k][j]*elCoef; 
@@ -112,13 +111,16 @@ int main(void) {
 
     // -- PARTIAL PIVOTING ---
     printf("------------PARTIAL PIVOTING------------------\n");
-    printf("\nA: \n");
     pivoting(coefs, rhs, permutation, dim);
     
-    printm(coefs, dim);
-    printv(rhs, dim);
     printf("\npermutation flatted matrix: \n");
     printv(permutation, dim);
+    
+    printf("\nA: \n");    
+    printm(coefs, dim);
+
+    printf("\nrhs: \n");
+    printv(rhs, dim);
 
     // -- ELIMINATION ---
     elimination(coefs, upper, lower, rhs, dim);
