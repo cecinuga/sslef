@@ -8,11 +8,20 @@ extern "C" {
 /* Absolute value for doubles */
 double dabs(double a);
 
-/* Swap two elements in an integer vector */
-void swap(size_t *v, const size_t dim, const size_t i, const size_t j);
+/* Swap two elements in an size_t vector */
+void swapst(size_t *v, const size_t dim, const size_t i, const size_t j);
+
+/* Swap two elements in an doible vector */
+void swap(double *v, const size_t dim, const size_t i, const size_t j);
 
 /* Swap two rows of a square matrix */
 void swapr(double **A, const size_t dim, const size_t i, const size_t j);
+
+#define swap(v, dim, i, j) _Generic((v),  \
+    size_t*: swapst,               \
+    double*: swap,              \
+    double**: swapr               \
+)(v, dim, i, j)
 
 /* Apply permutation matrix to another matrix, the permutation matrix must be flatted. */
 void permm(double **A, size_t *perm, const size_t dim);

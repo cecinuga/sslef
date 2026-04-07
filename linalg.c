@@ -15,7 +15,16 @@ double dabs(double a){
     return a*-1;
 }
 
-void swap(size_t *v, const size_t dim, const size_t i, const size_t j){
+void swapst(size_t *v, const size_t dim, const size_t i, const size_t j){
+    assert(i < dim);
+    assert(j < dim);
+
+    size_t tmp = v[i];
+    v[i] = v[j];
+    v[j] = tmp;
+}
+
+void swap(double *v, const size_t dim, const size_t i, const size_t j){
     assert(i < dim);
     assert(j < dim);
 
@@ -40,7 +49,7 @@ void permm(double **A, size_t *perm, const size_t dim){
 
 void permv(size_t *v, size_t *perm, const size_t length){
     for(size_t i = 0; i < length; i++)
-        swap(v, length, i, perm[i]);
+        swapst(v, length, i, perm[i]);
 }
 
 void zeros(double **A, const size_t dim){
