@@ -14,6 +14,7 @@ systems of linear equations **Ax = b**.
 ├── linalg.h
 ├── utils.c      # Alloc, free, copy, print helpers
 ├── utils.h      # Generic printv/printm macros
+├── test.c       # Standalone test binary (matrix multiply smoke test)
 └── Makefile
 ```
 
@@ -23,7 +24,8 @@ systems of linear equations **Ax = b**.
 
 ```bash
 make          # compiles to build/solver and creates a ./solver symlink
-make clean    # removes build/ and the symlink
+make clear    # removes build/ and the symlink
+make test     # compiles and runs test.c as build/test
 ```
 
 Requires GCC. Flags: `-Wall -Wextra -g`.
@@ -50,11 +52,11 @@ Steps 1 and 2 are not yet implemented.
 
 ## Functions
 
-#### `pivoting(A, permutation, dim)` — [solver.c](solver.c)
+#### `pivoting(A, rhs, permutation, dim)` — [solver.c](solver.c)
 For each column k, finds row j ≥ k with maximum `|A[j][k]|` and swaps it to
-position k. Records swaps in `permutation[]`.
+position k. Applies the same swap to `rhs` and `permutation[]` to keep them in sync.
 
-#### `elimination(A, U, L, dim)` — [solver.c](solver.c)
+#### `elimination(A, U, L, rhs, dim)` — [solver.c](solver.c)
 Doolittle LU factorization. Copies A into U first, then for each pivot column k:
 `L[i][k] = U[i][k] / U[k][k]` and `U[i][j] -= L[i][k] * U[k][j]`.
 
@@ -62,7 +64,10 @@ Doolittle LU factorization. Copies A into U first, then for each pivot column k:
 Absolute value of a `double`; avoids the `<math.h>` / `-lm` dependency.
 
 #### `swap(v, dim, i, j)` — [linalg.c](linalg.c)
-Swaps `v[i]` and `v[j]` in a `size_t` array (keeps permutation vector in sync).
+Swaps `v[i]` and `v[j]` in a `double` array.
+
+#### `swapst(v, dim, i, j)` — [linalg.c](linalg.c)
+Same as `swap` but for `size_t` arrays (used to keep the permutation vector in sync).
 
 #### `swapr(A, dim, i, j)` — [linalg.c](linalg.c)
 Exchanges row pointers `A[i]` and `A[j]` in O(1).
