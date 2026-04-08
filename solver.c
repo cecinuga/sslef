@@ -68,6 +68,10 @@ void elimination(double **A, double **U, double **L, double *rhs, const size_t d
     }
 }
 
+void forward_sub(double **L, double *rhs, double *y, const size_t dim){
+
+}
+
 /*
  * main -- Hard-coded 5x5 demonstration: row-reorders a matrix, factors it into
  * L and U, then prints the results.
