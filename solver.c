@@ -77,7 +77,7 @@ void forward_sub(double **L, double *rhs, double *y, const size_t dim){
 }
 
 void backward_sub(double **U, double *rhs, double *x, const size_t dim){
-    for (size_t i = dim-1; i-- > 0;) {
+    for (size_t i = dim; i-- > 0;) {
         x[i] = rhs[i];       
 
         for (size_t j = i+1; j < dim; j++) {
