@@ -169,7 +169,7 @@ int main(void) {
 
     free(coefs); free(permutation); free(rhs); free(fsrhs); free(sol);
     mfree(lower, dim); mfree(upper, dim);
-
+ 
     return 0;
 }
 
