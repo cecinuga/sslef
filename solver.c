@@ -18,7 +18,7 @@
  * pivoting -- For each column k, finds the row j >= k with the largest
  * |A[j][k]| and swaps it to position k. Records each swap in permutation[].
  */
-void pivoting(double **A, double *rhs, size_t *permutation, const size_t dim){
+void pivoting(double **A, size_t *permutation, const size_t dim){
     int max_i = 0;
     double max = 0;
 
@@ -32,7 +32,6 @@ void pivoting(double **A, double *rhs, size_t *permutation, const size_t dim){
             }
         }
 
-        swap(rhs, dim, i, max_i);
         swap(permutation, dim, i, max_i);
         swap(A, dim, i, max_i);
     }
@@ -51,7 +50,7 @@ void pivoting(double **A, double *rhs, size_t *permutation, const size_t dim){
  * Also, only U[0] is pre-populated; rows 1..dim-1 of U must be copied from
  * coefs before the loop begins.
  */
-void elimination(double **A, double **U, double **L, double *rhs, const size_t dim){
+void elimination(double **A, double **U, double **L, const size_t dim){
     /* Copy all rows of coefs (post-pivoting) into U before factoring */
     mcopy(U, A, dim);
     
@@ -69,7 +68,23 @@ void elimination(double **A, double **U, double **L, double *rhs, const size_t d
 }
 
 void forward_sub(double **L, double *rhs, double *y, const size_t dim){
+    for(size_t i = 0; i < dim; i++){
+        y[i] = rhs[i];
+        for(size_t j = 0; j < i; j++){
+            y[i] -= L[i][j] * y[j];
+        }
+    }
+}
 
+void backward_sub(double **U, double *rhs, double *x, const size_t dim){
+    for (size_t i = dim-1; i-- > 0;) {
+        x[i] = rhs[i];       
+
+        for (size_t j = i+1; j < dim; j++) {
+            x[i] -= U[i][j] * x[j];         
+        }
+        x[i] /= U[i][i];                     
+    }
 }
 
 /*
@@ -89,6 +104,8 @@ int main(void) {
     double **upper = mmalloc(dim, dim);
     double **lower = mmalloc(dim, dim);
     double *rhs = calloc(dim, sizeof(double)); 
+    double *fsrhs = calloc(dim, sizeof(double));
+    double *sol = calloc(dim, sizeof(double));
 
     rhs[0] = 1; rhs[1] = 2; rhs[2] = 3;
 
@@ -105,7 +122,7 @@ int main(void) {
 
     eye(lower, dim);
 
-    printf("------------------ORIGINAL-------------------\n");
+    printf("\n------------------ORIGINAL-------------------\n");
     printf("\nA: \n");
     printm(coefs, dim);
 
@@ -114,8 +131,8 @@ int main(void) {
 
 
     // -- PARTIAL PIVOTING ---
-    printf("------------PARTIAL PIVOTING------------------\n");
-    pivoting(coefs, rhs, permutation, dim);
+    printf("\n------------PARTIAL PIVOTING------------------\n");
+    pivoting(coefs, permutation, dim);
     
     printf("\npermutation flatted matrix: \n");
     printv(permutation, dim);
@@ -127,21 +144,30 @@ int main(void) {
     printv(rhs, dim);
 
     // -- ELIMINATION ---
-    elimination(coefs, upper, lower, rhs, dim);
 
-    // -- LOGGING --
-    printf("-----------------ELIMINATION--------------------\n");
+    printf("\n-----------------ELIMINATION--------------------\n");
+    elimination(coefs, upper, lower, dim);
+    
     printf("\nupper triangle: \n");
     printm(upper, dim);
 
-    printf("------------------------------\n");
     printf("\nlower triangle: \n");
     printm(lower, dim);
 
-    printf("\n rhs: \n");
-    printv(rhs, dim);
+    printf("\n--------------FORWARD SUBSTITUTION-------------\n");
+    perm(rhs, permutation, dim);
+    forward_sub(lower, rhs, fsrhs, dim);
 
-    free(coefs); free(permutation); free(rhs);
+    printf("\nLy = Pb:\n");
+    printv(fsrhs, dim);
+
+    printf("\n--------------BACKWARD SUBSTITUTION-------------\n");
+    backward_sub(upper, fsrhs, sol, dim);
+
+    printf("\nUx = y\n");
+    printv(sol, dim);
+
+    free(coefs); free(permutation); free(rhs); free(fsrhs); free(sol);
     mfree(lower, dim); mfree(upper, dim);
 
     return 0;
