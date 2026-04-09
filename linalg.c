@@ -43,18 +43,27 @@ void swapr(double **A, const size_t dim, const size_t i, const size_t j){
 }
 
 void permm(double **A, size_t *perm, const size_t dim){
-    for(size_t i = 0; i < dim; i++)
-        swapr(A, dim, i, perm[i]);
+    double **tmp = malloc(dim * sizeof(double*));
+    for (size_t i = 0; i < dim; i++)
+        tmp[i] = A[perm[i]];
+    memcpy(A, tmp, dim * sizeof(double*));
+    free(tmp);
 }
 
 void permv(double *v, size_t *perm, const size_t length){
-    for(size_t i = 0; i < length; i++)
-        swapv(v, length, i, perm[i]);
+    double *tmp = malloc(length * sizeof(double));
+    for (size_t i = 0; i < length; i++)
+        tmp[i] = v[perm[i]];
+    memcpy(v, tmp, length * sizeof(double));
+    free(tmp);
 }
 
 void permvst(size_t *v, size_t *perm, const size_t length){
-    for(size_t i = 0; i < length; i++)
-        swapvst(v, length, i, perm[i]);
+    size_t *tmp = malloc(length * sizeof(size_t));
+    for (size_t i = 0; i < length; i++)
+        tmp[i] = v[perm[i]];
+    memcpy(v, tmp, length * sizeof(size_t));
+    free(tmp);
 }
 
 void zeros(double **A, const size_t dim){
