@@ -28,7 +28,7 @@ void swapv(double *v, const size_t dim, const size_t i, const size_t j){
     assert(i < dim);
     assert(j < dim);
 
-    size_t tmp = v[i];
+    double tmp = v[i];
     v[i] = v[j];
     v[j] = tmp;
 }
