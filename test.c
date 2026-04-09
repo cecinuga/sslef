@@ -28,8 +28,10 @@ int main(void){
     printm(B, dim);
 
     printf("result of multiplication: \n");
-    mmmul(A, B, A, dim);
-    printm(A, dim);
+    double **out = mmalloc(dim, dim);
+    mmmul(A, B, out, dim);
+    printm(out, dim);
+    mfree(out, dim);
 
     return 0;
 }
